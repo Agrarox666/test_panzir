@@ -1,38 +1,11 @@
-from random import choice
-
-from app import tasks as test_data_tasks, client
+from app import tasks as test_data_tasks, app
 
 error_messages = {
     400: 'Bad request',
     404: 'Not found',
 }
 
-
-def test_get_tasks():
-    """test getting all the tasks."""
-    response = client.get('/todo/api/v1.0/tasks')
-    data = response.get_json()
-    assert response.status_code == 200
-    assert 'tasks' in data
-    assert data['tasks'] == test_data_tasks
-
-
-def test_get_task():
-    """test getting task by ID."""
-    for task_id in (1, 2):
-        response = client.get(f'/todo/api/v1.0/tasks/{task_id}')
-        data = response.get_json()
-        assert response.status_code == 200
-        assert 'task' in data
-        assert data['task'] == test_data_tasks[task_id - 1]
-
-    # test non-existent task
-    non_existent_task_id = choice((3, 100))
-    response = client.get(f'/todo/api/v1.0/tasks/{non_existent_task_id}')
-    data = response.get_json()
-    assert response.status_code == 404
-    assert 'error' in data
-    assert data['error'] == error_messages[response.status_code]
+client = app.test_client()
 
 
 def test_create_task():
@@ -71,6 +44,78 @@ def test_create_task():
     ]
     response = client.post('/todo/api/v1.0/tasks', json=bad_task_2)
     data = response.get_json()
+    assert response.status_code == 400
+    assert 'error' in data
+    assert data['error'] == error_messages[response.status_code]
+
+
+def test_get_tasks():
+    """test getting all the tasks."""
+    print(f'test_data_tasks = {test_data_tasks}')
+    response = client.get('/todo/api/v1.0/tasks')
+    data = response.get_json()
+    assert response.status_code == 200
+    assert 'tasks' in data
+    assert data['tasks'] == test_data_tasks
+
+
+def test_get_task():
+    """test getting task by ID."""
+    for task_id in (1, 2):
+        response = client.get(f'/todo/api/v1.0/tasks/{task_id}')
+        data = response.get_json()
+        assert response.status_code == 200
+        assert 'task' in data
+        assert data['task'] == test_data_tasks[task_id - 1]
+
+    # test non-existent task
+    non_existent_task_id = 100
+    response = client.get(f'/todo/api/v1.0/tasks/{non_existent_task_id}')
+    data = response.get_json()
+    assert response.status_code == 404
+    assert 'error' in data
+    assert data['error'] == error_messages[response.status_code]
+
+
+def test_update_task():
+    """Test updating tasks."""
+    task_to_update = {
+        'title': 'Updated title',
+        'description': 'Updated items',
+        'done': False
+    }
+    right_updated_task = {
+        'id': 1,
+        'title': 'Updated title',
+        'description': 'Updated items',
+        'done': False
+    }
+    response = client.put('/todo/api/v1.0/tasks/1', json=task_to_update)
+    data = response.get_json()
+
+    assert response.status_code == 200
+    assert 'task' in data
+    assert data['task'] == right_updated_task
+    assert (right_updated_task ==
+            client.get('/todo/api/v1.0/tasks/1').get_json()['task'])
+
+    # test non-existent task
+    task_id = 45
+    response = client.put(f'/todo/api/v1.0/tasks/{task_id}',
+                          json=task_to_update)
+    data = response.get_json()
+
+    assert response.status_code == 404
+    assert 'error' in data
+    assert data['error'] == error_messages[response.status_code]
+
+    # test task with bad data
+    bad_task = [
+        'id', 3, 'description', 'Test', False
+    ]
+    response = client.put('/todo/api/v1.0/tasks/1', json=bad_task)
+    data = response.get_json()
+
     assert response.status_code == 400
     assert 'error' in data
     assert data['error'] == error_messages[response.status_code]

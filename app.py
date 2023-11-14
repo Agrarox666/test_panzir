@@ -1,7 +1,8 @@
+import json
+
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
-client = app.test_client()
 # Input data
 tasks = [
     {
@@ -40,7 +41,9 @@ def get_task(task_id):
 @app.route('/todo/api/v1.0/tasks', methods=['POST'])
 def create_task():
     """Create a new task."""
-    if not request.json or 'title' not in request.json:
+
+    # request.json doesn't indicate type of data, request.get_json does
+    if not request.get_json(silent=True) or 'title' not in request.json:
         return jsonify({'error': 'Bad request'}), 400
 
     new_task = {
@@ -64,6 +67,24 @@ def delete_task(task_id):
 
     tasks.remove(task_to_delete)
     return jsonify({'result': True})
+
+
+@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['PUT'])
+def update_task(task_id):
+    """Update a specific task by its ID."""
+    task_to_update = \
+        (next((task for task in tasks if task['id'] == task_id), None))
+    if task_to_update is None:
+        return jsonify({'error': 'Not found'}), 404
+
+    # check if data is correct and is not empty
+    try:
+        new_task = request.json
+        task_to_update.update(new_task)
+    except TypeError:
+        return jsonify({'error': 'Bad request'}), 400
+
+    return jsonify({'task': task_to_update})
 
 
 if __name__ == '__main__':
