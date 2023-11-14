@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
-
+client = app.test_client()
 # Input data
 tasks = [
     {
