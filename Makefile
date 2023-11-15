@@ -1,6 +1,6 @@
 lint:
-	flake8 app
-	flake8 project_tests
+	poetry run flake8 app
+	poetry run flake8 project_tests
 
 tests_no_bd:
 	pytest -vv tests_modules/tests_no_bd.py
@@ -13,3 +13,6 @@ run_no_bd:
 
 run:
 	python run.py
+
+install:
+	poetry install
