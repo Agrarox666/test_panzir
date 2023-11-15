@@ -12,7 +12,7 @@ from app.database import (create_task,
 
 app = Flask(__name__)
 load_dotenv()
-app.config['DATABASE_NAME'] = os.getenv('DATABASE_NAME')
+app.config['DATABASE_NAME'] = "app/tasks.db"
 
 
 def connection_to_db(database=app.config['DATABASE_NAME']):
