@@ -74,7 +74,7 @@ Welcome to the Todo API documentation. This API allows you to manage tasks in a 
 -   **Description:** Update the details of a specific task.
 -   **Request Format:**
 ```json
-`{
+{
   "title": "Updated Task Title",
   "description": "Updated Task Description",
   "done": true
@@ -82,7 +82,7 @@ Welcome to the Todo API documentation. This API allows you to manage tasks in a 
 ```
 -   **Response Format:**
 ```json
-`{
+{
   "task": {
     "id": 1,
     "title": "Updated Task Title",
@@ -97,7 +97,7 @@ Welcome to the Todo API documentation. This API allows you to manage tasks in a 
 -   **Description:** Delete a specific task.
 -   **Response Format:**
 ```json
-`{
+{
   "result": true
 }
 ```
