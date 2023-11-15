@@ -1,7 +1,5 @@
 import sqlite3
 
-from app.models import Task
-
 
 def create_table(conn):
     """Create task table."""
@@ -25,6 +23,9 @@ def create_table(conn):
         )
         conn.commit()
         conn.close()
+
+
+from app.models import Task
 
 
 def sql_to_task(data):

@@ -12,7 +12,7 @@ run_no_db:
 	poetry run python app_no_bd.py
 
 run:
-	poetry run python run.py
+	poetry run python app/routes.py
 
 install:
 	poetry install

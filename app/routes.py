@@ -1,20 +1,37 @@
+import os
 import sqlite3
-
+import sys
+from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.ext.declarative import declarative_base
+from flask_jwt_extended import JWTManager
+from sqlalchemy import create_engine
 from flask import jsonify, request
 from flask import Flask
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+from config import Config
+
+app = Flask(__name__)
+app.config.from_object(Config)
+engine = create_engine('sqlite:///app/tasks.db')
+session = scoped_session(sessionmaker(
+    autocommit=False, autoflush=False, bind=engine))
+
+Base = declarative_base()
+Base.query = session.query_property()
+jwt = JWTManager(app)
+
+
+def connection_to_db(db_name="app/tasks.db"):
+    """Return connection to database."""
+    return sqlite3.connect(db_name)
+
+
 from app.database import (create_task,
                           get_tasks,
                           get_task,
                           update_task,
-                          delete_task)
-
-app = Flask(__name__)
-app.config['DATABASE_NAME'] = "app/tasks.db"
-
-
-def connection_to_db(database=app.config['DATABASE_NAME']):
-    """Return connection to database."""
-    return sqlite3.connect(database)
+                          delete_task, create_table)
 
 
 @app.route('/todo/api/v1.0/tasks', methods=['POST'])
@@ -74,3 +91,30 @@ def delete_task_route(task_id):
 
     delete_task(task_id, connection_to_db())
     return jsonify({'result': True})
+
+
+from app.models import User
+
+
+@app.route('/todo/api/v1.0/register', methods=['POST'])
+def register():
+    params = request.json
+    user = User(**params)
+    session.add(user)
+    session.commit()
+    token = user.get_token()
+    return jsonify({'access_token': token})
+
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    session.remove()
+
+
+def main():
+    create_table()
+    app.run(debug=True)
+
+
+if __name__ == '__main__':
+    main()
