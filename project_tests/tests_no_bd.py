@@ -1,4 +1,4 @@
-from app import tasks as test_data_tasks, app
+from app_no_bd import tasks as test_data_tasks, app
 
 error_messages = {
     400: 'Bad request',
@@ -10,6 +10,7 @@ client = app.test_client()
 
 def test_create_task():
     """Test creating tasks."""
+
     new_task = {
         'id': len(test_data_tasks) + 1,
         'title': 'Test task\'s title',
@@ -51,7 +52,7 @@ def test_create_task():
 
 def test_get_tasks():
     """test getting all the tasks."""
-    print(f'test_data_tasks = {test_data_tasks}')
+
     response = client.get('/todo/api/v1.0/tasks')
     data = response.get_json()
     assert response.status_code == 200
@@ -61,6 +62,7 @@ def test_get_tasks():
 
 def test_get_task():
     """test getting task by ID."""
+
     for task_id in (1, 2):
         response = client.get(f'/todo/api/v1.0/tasks/{task_id}')
         data = response.get_json()
@@ -79,6 +81,7 @@ def test_get_task():
 
 def test_update_task():
     """Test updating tasks."""
+
     task_to_update = {
         'title': 'Updated title',
         'description': 'Updated items',
