@@ -2,13 +2,13 @@ lint:
 	poetry run flake8 app
 	poetry run flake8 project_tests
 
-tests_no_bd:
-	poetry run pytest -vv project_tests/tests_no_bd.py
+tests_no_db:
+	poetry run pytest -vv project_tests/tests_no_db.py
 
-tests_bd:
-	poetry run python project_tests/tests_bd.py
+tests_db:
+	poetry run python project_tests/tests_db.py
 
-run_no_bd:
+run_no_db:
 	poetry run python app_no_bd.py
 
 run:

@@ -1,4 +1,4 @@
-from app_no_bd import tasks as test_data_tasks, app
+from app_no_db import tasks as test_data_tasks, app
 
 error_messages = {
     400: 'Bad request',

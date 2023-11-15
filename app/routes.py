@@ -1,8 +1,6 @@
 import sqlite3
 
 from flask import jsonify, request
-import os
-from dotenv import load_dotenv
 from flask import Flask
 from app.database import (create_task,
                           get_tasks,
@@ -11,7 +9,6 @@ from app.database import (create_task,
                           delete_task)
 
 app = Flask(__name__)
-load_dotenv()
 app.config['DATABASE_NAME'] = "app/tasks.db"
 
 
