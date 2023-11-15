@@ -36,6 +36,10 @@ Welcome to the Todo API documentation. This API allows you to manage tasks in a 
   }
 }
 ```
+-   **Status Codes:**
+    -   `201 Created`: Task successfully created.
+    -   `400 Bad Request`: Invalid request format.
+
 2. Get all the tasks.
 -   **Endpoint:** `/todo/api/v1.0/tasks`
 -   **Method:** `GET`
@@ -53,7 +57,10 @@ Welcome to the Todo API documentation. This API allows you to manage tasks in a 
     // Other tasks...
   ]
 }
-````
+```
+-   **Status Codes:**
+     -   `200 OK`: Tasks successfully retrieved or got response with `{'empty': True}`.
+    
 3. Get specific task by its ID.
 -   **Endpoint:** `/todo/api/v1.0/tasks/<int:task_id>`
 -   **Method:** `GET`
@@ -68,6 +75,10 @@ Welcome to the Todo API documentation. This API allows you to manage tasks in a 
     "done": false
 }
 ```
+- Status Codes:
+     -   `200 OK`: Task details successfully retrieved.
+     -   `404 Not Found`: Task not found.
+  
 4. Update a task.
 -   **Endpoint:** `/todo/api/v1.0/tasks/<int:task_id>`
 -   **Method:** `PUT`
@@ -91,6 +102,10 @@ Welcome to the Todo API documentation. This API allows you to manage tasks in a 
   }
 }
 ```
+- Status Codes:
+     -   `200 OK`: Task successfully updated.
+     -   `400 Bad Request`: Invalid request format.
+     -   `404 Not Found`: Task not found.
 5. Delete a task.
 -   **Endpoint:** `/todo/api/v1.0/tasks/<int:task_id>`
 -   **Method:** `DELETE`
@@ -101,6 +116,9 @@ Welcome to the Todo API documentation. This API allows you to manage tasks in a 
   "result": true
 }
 ```
+- Status Codes:
+     -   `200 OK`: Task successfully deleted.
+     -   `404 Not Found`: Task not found.
 ## Installation
 ```bash
 	1. Clone the repository to your computer:
